@@ -110,13 +110,17 @@ public class DrugListener implements Listener{
 				if(new Random().nextInt(100)<=Translations.DROPCHANCE_SEEDS_STRAWBERRY) {
 					e.getBlock().getWorld().dropItemNaturally(e.getBlock().getLocation(), Items.STRAWBERRY_SEEDS); //drop the item by probability
 				}
+			} else if(e.getBlock().getType()==Material.DEAD_BUSH) {
+				if(new Random().nextInt(100)<=Translations.DROPCHANCE_HYDRASTIS_CANADENSIS) {
+					e.getBlock().getWorld().dropItemNaturally(e.getBlock().getLocation(), Items.HYDRASTININ); //(hydrastinin = hydrastis canadensis) drop the item by probability
+				}
 			}
 		}		
 	}
 	@EventHandler
 	public void onClick(InventoryClickEvent e) {
 		if(e.getInventory()!=null&&e.getCurrentItem()!=null) {
-			if(v.hasTag(e.getCurrentItem(),"placeholder")) e.setCancelled(true); //cancel the event if the item should not be taken
+			if(v.hasTag(e.getCurrentItem(),"placeholder")) e.setCancelled(true); //cancel the event if the item should not be taken from the inventory
 			Player p = (Player) e.getWhoClicked();
 			if(lastInteract.get(p)!=null&&lastInteract.get(p)instanceof Synthesizer) { 
 				if(e.getCurrentItem().getType()==Material.REDSTONE)	{
@@ -141,10 +145,10 @@ public class DrugListener implements Listener{
 				if(e.getView().getTitle().equals(PriceList.INVENTORY_TITLE_DARKNET_DRUGSTORE)) {
 					ShopItem i = Shop.get(e.getCurrentItem());
 					if(i!=null)
-					if(e.isRightClick()&&e.isShiftClick()) {
-						i.buy(p);
-					}
-				}
+						if(e.isRightClick()&&e.isShiftClick()) {
+							i.buy(p); //buy the item
+						}
+				}	
 			}
 				
 			
@@ -156,23 +160,23 @@ public class DrugListener implements Listener{
 			FunctionBlock f = Manager.getFunctionBlock(e.getClickedBlock().getLocation());
 			if(f!=null) {
 				if(f instanceof Interactable) {
-					FunctionblockInteractEvent fie = new FunctionblockInteractEvent(e.getPlayer(), f);
-					Bukkit.getPluginManager().callEvent(fie);
-					if(!fie.isCancelled()) {
-						f.onInteract(e.getPlayer());					
-						lastInteract.put(e.getPlayer(), f);
-						e.setCancelled(true);
+					FunctionblockInteractEvent fie = new FunctionblockInteractEvent(e.getPlayer(), f); //create the event
+					Bukkit.getPluginManager().callEvent(fie); //call the event
+					if(!fie.isCancelled()) { //check if the event is cancelled
+						f.onInteract(e.getPlayer()); //interact with the clicked block					
+						lastInteract.put(e.getPlayer(), f); //save the interacted block to the hashmap
+						e.setCancelled(true);  //cancel the event
 					}					
-				}else if(f instanceof WeedPlant&&e.getMaterial()==Material.INK_SACK&&e.getItem().getDurability()==(short)15) {
+				}else if(f instanceof WeedPlant&&e.getMaterial()==Material.INK_SACK&&e.getItem().getDurability()==(short)15) { //bonemeal
 					e.setCancelled(true);
-					int i = e.getPlayer().getItemInHand().getAmount()-1;
-					if(i == 0) e.getPlayer().setItemInHand(new ItemStack(Material.AIR));
-					else e.getPlayer().getItemInHand().setAmount(i);
-				} else	if(f instanceof Strawberry&&e.getMaterial()==Material.INK_SACK&&e.getItem().getDurability()==(short)15) {
+					int i = e.getPlayer().getItemInHand().getAmount()-1; //get new item amount
+					if(i == 0) e.getPlayer().setItemInHand(new ItemStack(Material.AIR)); //remove the item if amount=0
+					else e.getPlayer().getItemInHand().setAmount(i); //set the new amount
+				} else	if(f instanceof Strawberry&&e.getMaterial()==Material.INK_SACK&&e.getItem().getDurability()==(short)15) { //bonemeal
 					((Strawberry) f).grow();
-					int i = e.getPlayer().getItemInHand().getAmount()-1;
-					if(i == 0) e.getPlayer().setItemInHand(new ItemStack(Material.AIR));
-					else e.getPlayer().getItemInHand().setAmount(i);
+					int i = e.getPlayer().getItemInHand().getAmount()-1; //get new item amount
+					if(i == 0) e.getPlayer().setItemInHand(new ItemStack(Material.AIR)); //remove the item if amount=0
+					else e.getPlayer().getItemInHand().setAmount(i); //set the new amount
 				}
 			}
 			
@@ -180,18 +184,18 @@ public class DrugListener implements Listener{
 		if(e.getAction()==Action.RIGHT_CLICK_BLOCK||e.getAction()==Action.RIGHT_CLICK_AIR) {
 			if(e.getMaterial()==Material.BROWN_MUSHROOM||e.getMaterial()==Material.RED_MUSHROOM) {
 				DrugLabs.VERSIONHANDLER.playBurpSound(e.getPlayer(), 1.0f, 1.0f);
-				int i = e.getPlayer().getItemInHand().getAmount()-1;
-				if(i == 0) e.getPlayer().setItemInHand(new ItemStack(Material.AIR));
-				else e.getPlayer().getItemInHand().setAmount(i);
-				new TripMushroom(e.getPlayer()).startTrip();
+				int i = e.getPlayer().getItemInHand().getAmount()-1; //get new item amount
+				if(i == 0) e.getPlayer().setItemInHand(new ItemStack(Material.AIR)); //remove the item if amount=0
+				else e.getPlayer().getItemInHand().setAmount(i); //set the new amount
+				new TripMushroom(e.getPlayer()).startTrip(); //start the trip
 				return;
 			} else if(v.hasTag(e.getItem(), "strawberry")) {
 				if(e.getPlayer().getFoodLevel()<20) {
 					DrugLabs.VERSIONHANDLER.playBurpSound(e.getPlayer(), 1.0f, 1.0f);
-					int i = e.getPlayer().getItemInHand().getAmount()-1;
-					if(i == 0) e.getPlayer().setItemInHand(new ItemStack(Material.AIR));
-					else e.getPlayer().getItemInHand().setAmount(i);
-					e.getPlayer().setFoodLevel(e.getPlayer().getFoodLevel()+3);
+					int i = e.getPlayer().getItemInHand().getAmount()-1; //get new item amount
+					if(i == 0) e.getPlayer().setItemInHand(new ItemStack(Material.AIR)); //remove the item if amount=0
+					else e.getPlayer().getItemInHand().setAmount(i); //set the new amount
+					e.getPlayer().setFoodLevel(e.getPlayer().getFoodLevel()+3); //increase food level 
 				}
 				e.setCancelled(true);
 		
@@ -201,19 +205,19 @@ public class DrugListener implements Listener{
 				if(new Random().nextBoolean())
 					new TripBadLSD(e.getPlayer()).startTrip();
 				else new TripNiceLSD(e.getPlayer()).startTrip();
-				int i = e.getPlayer().getItemInHand().getAmount()-1;
-				if(i == 0) e.getPlayer().setItemInHand(new ItemStack(Material.AIR));
-				else e.getPlayer().getItemInHand().setAmount(i);
+				int i = e.getPlayer().getItemInHand().getAmount()-1; //get new item amount
+				if(i == 0) e.getPlayer().setItemInHand(new ItemStack(Material.AIR)); //remove the item if amount=0
+				else e.getPlayer().getItemInHand().setAmount(i);//set the new amount
 			} else if(v.hasTag(e.getItem(),"weedgrown")) {
 					new TripNiceWeed(e.getPlayer()).startTrip();
-				int i = e.getPlayer().getItemInHand().getAmount()-1;
-				if(i == 0) e.getPlayer().setItemInHand(new ItemStack(Material.AIR));
-				else e.getPlayer().getItemInHand().setAmount(i);
+				int i = e.getPlayer().getItemInHand().getAmount()-1; //get new item amount
+				if(i == 0) e.getPlayer().setItemInHand(new ItemStack(Material.AIR)); //remove the item if amount=0
+				else e.getPlayer().getItemInHand().setAmount(i); //set the new amount
 			} else if(v.hasTag(e.getItem(),"mdma")) {
 				new TripMDMA(e.getPlayer()).startTrip();
-			int i = e.getPlayer().getItemInHand().getAmount()-1;
-			if(i == 0) e.getPlayer().setItemInHand(new ItemStack(Material.AIR));
-			else e.getPlayer().getItemInHand().setAmount(i);
+			int i = e.getPlayer().getItemInHand().getAmount()-1; //get new item amount
+			if(i == 0) e.getPlayer().setItemInHand(new ItemStack(Material.AIR)); //remove the item if amount=0
+			else e.getPlayer().getItemInHand().setAmount(i); //set the new amount
 		} 
 		}
 		
@@ -255,7 +259,7 @@ public class DrugListener implements Listener{
 		FunctionBlock b = Manager.getFunctionBlock(e.getBlock().getLocation());
 		if(b!=null) {
 			if(b instanceof WeedSeed) {
-				if(e.getBlock().getLightLevel()<14) { //check the lightlevel 15 max
+				if(e.getBlock().getLightLevel()<14) { //check the lightlevel ( 15 is max )
 					e.setCancelled(true);
 				} else {
 					e.setCancelled(true);

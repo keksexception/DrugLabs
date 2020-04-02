@@ -37,6 +37,12 @@ public class ShopItem {
 	public String getCurrency() {
 		return currency;
 	}
+	/**
+	 * this method also play's the sounds and removes the {@link ShopItem#getBuy() buyprice}
+	 * from the bankaccount
+	 * 
+	 * @param p player who buys the item
+	 */
 	public void buy(Player p) {
 		if(VaultBridge.getEconomy().has(p, getBuy())) {
 			DrugLabs.VERSIONHANDLER.playExperienceSound(p, 1.0f, 0.6f);
@@ -45,7 +51,7 @@ public class ShopItem {
 		} else DrugLabs.VERSIONHANDLER.playBurpSound(p, 0.5f, 2f);
 	}
 	public void sell(Player p) {
-		
+		//TODO
 	}
 	
 }

@@ -104,6 +104,8 @@ public class Translations {
 	@Configurable(Files.CONFIG)
 	public static int DROPCHANCE_SEEDS_STRAWBERRY = 10;
 	@Configurable(Files.CONFIG)
+	public static int DROPCHANCE_HYDRASTIS_CANADENSIS = 30;
+	@Configurable(Files.CONFIG)
 	public static String COMMAND_DRUGLABS_PERMISSION = "druglabs.admin";
 	@Configurable(Files.CONFIG)
 	public static boolean ECONOMY = false;
